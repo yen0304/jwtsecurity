@@ -3,7 +3,10 @@ package com.example.demo.Service;
 
 import com.example.demo.Dao.UserRepository;
 import com.example.demo.Model.UserBean;
+import com.example.demo.config.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,6 +18,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    SecurityConfig securityConfig;
+
     @Override
     public List<UserBean> getAllUser() {
         return userRepository.findAll();
@@ -22,6 +28,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserBean saveUser(UserBean bean){
+        PasswordEncoder passwordEncoder = securityConfig.passwordEncoder();
+        bean.setPassword(passwordEncoder.encode(bean.getPassword()));
         return userRepository.save(bean);
     }
 

@@ -34,9 +34,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("找不到帳號，或是密碼錯誤");
         }
 
-        //把UserBean物件封裝成UserDetails
+        //5.2把UserBean物件封裝成UserDetails
         //第一個方法是寫一個LoginUser累繼承UserDetails，或是直接在UserBean繼承UserDetails
 
+        //6.返回UserDetails物件
         return new LoginUser(userBean);
     }
 
