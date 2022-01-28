@@ -20,7 +20,7 @@ import java.util.Objects;
 public class UserDetailServiceImpl implements UserDetailsService {
 
     @Autowired
-    UserServiceImpl userServiceImpl;
+    private UserService userService;
 
     //查詢用戶訊息
 
@@ -28,7 +28,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //查詢
-        UserBean userBean =userServiceImpl.findByUsername(username);
+        UserBean userBean =userService.findByUsername(username);
         //如果沒有查詢到就拋出異常
         if(Objects.isNull(userBean)){
             throw new UsernameNotFoundException("找不到帳號，或是密碼錯誤");
@@ -38,7 +38,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         //第一個方法是寫一個LoginUser累繼承UserDetails，或是直接在UserBean繼承UserDetails
 
         //6.返回UserDetails物件
-        return new LoginUser(userBean);
+         return new LoginUser(userBean);
     }
 
 }

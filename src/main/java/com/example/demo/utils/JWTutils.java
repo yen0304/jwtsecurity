@@ -29,18 +29,25 @@ public class JWTutils {
     //private static final String TOKEN_SECRET = "privateKey";
     private static final String TOKEN_SECRET = "cuAihCz53DZRjZwbsGcZJ2Ai6At+T142uphtJMsk7iQ=";
 
+    /**
+     * 生成jwt
+     * @param id UUID
+     * @param subject 資訊
+     * @param ttlMillis 過期時間
+     * @return
+     */
     //id是唯一的id，uuid進行生成，subject是jwt帶的數據，ttlMills是超時時間
-    public static String creatJWT(String id,String subject,Long ttlMills){
+    public static String creatJWT(String id,String subject,Long ttlMillis){
 
         //SignatureAlgorithm signatureAlgorithm=SignatureAlgorithm.ES256; jwt(0.9.0)
         SignatureAlgorithm signatureAlgorithm=SignatureAlgorithm.HS256;
         long nowMillis = System.currentTimeMillis(); //.currentTimeMillis() 方法返回當前時間(毫秒)
         Date now=new Date(nowMillis);
         //如果傳進的預設時間為null，預設過期時間設為15分鐘
-        if(ttlMills  == null){
-            ttlMills=JWTutils.EXPIRE_TIME;
+        if(ttlMillis  == null){
+            ttlMillis=JWTutils.EXPIRE_TIME;
         }
-        long expMills = nowMillis + ttlMills; //過期時間點＝目前時間＋過期時間
+        long expMills = nowMillis + ttlMillis; //過期時間點＝目前時間＋過期時間
         Date expDate = new Date(expMills);
 
         //SecretKey secretKey = generalKey(); //生成私有密鑰 (jwt 0.9.0)
@@ -48,7 +55,7 @@ public class JWTutils {
 
         JwtBuilder builder = Jwts.builder()
                 .setId(id)
-                .setSubject(subject) //主題，可以是json數據
+                .setSubject(subject) //主題可以是json數據
                 .setIssuer("yen") //簽名
                 .setIssuedAt(now) //簽發時間
                 .signWith(secretKey,signatureAlgorithm)
@@ -57,6 +64,30 @@ public class JWTutils {
 
         return builder.compact();
     }
+
+
+    /**
+     * 生成jwt
+     * @param subject
+     * @param ttlMillis
+     * @return
+     */
+    public static String creatJWT(String subject,Long ttlMillis){
+        if(ttlMillis  == null){
+            ttlMillis=JWTutils.EXPIRE_TIME;
+        }
+        return  creatJWT(getUUID(),subject,ttlMillis);
+    }
+
+    /**
+     * 生成jwt
+     * @param subject
+     * @return
+     */
+    public static String creatJWT(String subject){
+        return  creatJWT(getUUID(),subject,null);
+    }
+
 
     //生成令牌
     //public  static  SecretKey generalKey(){ //(jwt 0.9.0)
@@ -92,6 +123,9 @@ public class JWTutils {
                 .getBody();
     }
 
+    private static String getUUID(){
+        return UUID.randomUUID().toString();
+    }
     /**
      * 測試JWT生成與解析的工具
      *
@@ -100,12 +134,13 @@ public class JWTutils {
      */
     public static void main(String[] args) throws Exception {
         //生成
-        String token = JWTutils.creatJWT(UUID.randomUUID().toString(), "測試", null);
+        String token = JWTutils.creatJWT("測試", null);
         System.out.println("生成token=:" + token);
         //解析
         //try {
         Claims claims = JWTutils.parseJWT(token);
         System.out.println("解析成功" + claims.getSubject());
+
         //}catch (Exception exception){
         //System.out.println("解析失敗:");
         //exception.printStackTrace();
