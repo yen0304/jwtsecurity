@@ -60,7 +60,8 @@ public class JwtAuthenticationTokenFIlter extends OncePerRequestFilter {
         //principal 用戶 因為到這裡已經認證通過了
         //credentials 一般放密碼（因為到這裡已經認證通過了）
                 //TODO獲取權限訊息到authentication裡面
-                =new UsernamePasswordAuthenticationToken(loginUser,null,null);//第一個是用戶訊息，第三個參數是權限
+                //=new UsernamePasswordAuthenticationToken(loginUser,null,null);//第一個是用戶訊息，第三個參數是權限
+                =new UsernamePasswordAuthenticationToken(loginUser,null, loginUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         //放行
