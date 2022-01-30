@@ -26,4 +26,8 @@ public class LoginController {
         return loginService.login(userBean);
     }
 
+    @RequestMapping("/user/logout")
+    public ResponseResult logout(){
+        return loginService.logout();
+    }
 }

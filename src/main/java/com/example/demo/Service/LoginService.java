@@ -5,4 +5,6 @@ import com.example.demo.domain.ResponseResult;
 
 public interface LoginService {
     ResponseResult login(UserBean userBean);
+
+    ResponseResult logout();
 }

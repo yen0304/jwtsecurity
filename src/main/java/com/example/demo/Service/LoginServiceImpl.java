@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -49,5 +50,19 @@ public class LoginServiceImpl implements LoginService{
         redisCache.setCacheObject("token:" + userId,loginUser);
         //token是直接返回給用戶的，之後前端的所有請求都要戴上token，否則請求失敗
         return new ResponseResult(200,"登入成功",map);
+    }
+
+    /**
+     * 登出
+     * @return
+     */
+    @Override
+    public ResponseResult logout() {
+        //獲取SecurityContextHolder裡面的userId
+        UsernamePasswordAuthenticationToken authentication=(UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser =(LoginUser) authentication.getPrincipal();
+        Long userid = loginUser.getUserBean().getId();
+        redisCache.deleteObject("token:" + userid);
+        return new ResponseResult(200,"登出成功");
     }
 }
