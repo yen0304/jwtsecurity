@@ -1,6 +1,8 @@
 package com.example.demo.config;
 
 import com.example.demo.filter.JwtAuthenticationTokenFIlter;
+import com.example.demo.handler.AccessDeniedHandlerImpl;
+import com.example.demo.handler.AuthenicationEntryPointImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationTokenFIlter jwtAuthenticationTokenFIlter;
+
+    @Autowired
+    private AccessDeniedHandlerImpl accessDeniedHandler;
+
+    @Autowired
+    private AuthenicationEntryPointImpl authenicationEntryPoint;
 
     //訂製一個方法來返回BCryptPasswordEncoder()
     @Bean
@@ -57,6 +65,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return this.addFilter(filter);
     }
          */
+        //加過濾器
         http.addFilterBefore(jwtAuthenticationTokenFIlter, UsernamePasswordAuthenticationFilter.class);
+
+        //配置異常處理器
+        http
+                .exceptionHandling()
+                .authenticationEntryPoint(authenicationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler);
     }
 }

@@ -10,7 +10,13 @@ public class HelloController {
 
     @RequestMapping("/hello")
     @PreAuthorize("hasAuthority('system:dept:list')")
-    public  String hell0(){
+    public  String hello(){
+        return "hello";
+    }
+
+    @RequestMapping("/hello2")
+    @PreAuthorize("hasAuthority('system:admin:list')")
+    public  String hello2(){
         return "hello";
     }
 }
