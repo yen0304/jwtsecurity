@@ -25,6 +25,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private MenuService menuService;
+
     //查詢用戶訊息
 
     //查詢對應的用戶訊息
@@ -42,8 +45,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
         //6.返回UserDetails物件
 
         //查詢權限訊息
-        List<String> list=new ArrayList<>(Arrays.asList("test","admin")); //寫死
-         return new LoginUser(userBean,list);
+        List<String> list=menuService.findPermsByUserId(userBean.getId());//new ArrayList<>(Arrays.asList("test","admin"));
+        return new LoginUser(userBean,list);
     }
 
 }
