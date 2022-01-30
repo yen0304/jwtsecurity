@@ -1,5 +1,7 @@
 package com.example.demo.config;
 
+import com.example.demo.filter.JwtAuthenticationTokenFIlter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * 在實際上，不會把密碼的明文存在資料庫裡面，所以springsecurity一般提供的BCrtptpasswordEnconder
@@ -16,6 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private JwtAuthenticationTokenFIlter jwtAuthenticationTokenFIlter;
 
     //訂製一個方法來返回BCryptPasswordEncoder()
     @Bean
@@ -42,5 +48,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable();
+
+        /*
+        public HttpSecurity addFilterBefore(Filter filter, Class<? extends Filter> beforeFilter) {
+        this.comparator.registerBefore(filter.getClass(), beforeFilter);
+        return this.addFilter(filter);
+    }
+         */
+        http.addFilterBefore(jwtAuthenticationTokenFIlter, UsernamePasswordAuthenticationFilter.class);
     }
 }

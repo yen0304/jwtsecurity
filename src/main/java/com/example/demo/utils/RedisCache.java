@@ -69,6 +69,7 @@ public class RedisCache {
      * @param <T>
      * @return
      */
+    //使用方法泛行
     public <T> T getCacheObject(final String key){
         ValueOperations<String,T> operations=redisTemplate.opsForValue();
         return operations.get(key);

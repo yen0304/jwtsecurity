@@ -45,8 +45,8 @@ public class LoginServiceImpl implements LoginService{
         String jwt =JWTutils.creatJWT(userId);
         Map<String,String> map = new HashMap<>();
         map.put("token",jwt);
-        //再把完整的用戶訊息存入redis userid作為key
-        redisCache.setCacheObject("token" + userId,loginUser);
+        //再把完整的用戶訊息存入redis userid作為key，token:是自定義前綴
+        redisCache.setCacheObject("token:" + userId,loginUser);
         //token是直接返回給用戶的，之後前端的所有請求都要戴上token，否則請求失敗
         return new ResponseResult(200,"登入成功",map);
     }
